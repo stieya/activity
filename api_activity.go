@@ -1,6 +1,7 @@
 package activity
 
 import (
+	"errors"
 	"fmt"
 	"log"
 	"net/http"
@@ -121,9 +122,8 @@ func (a *APIActivityRequest) validate(db interface{}) error {
 	if err != nil {
 		return err
 	}
-	err = checkRequired("request", ToString(a.Request))
-	if err != nil {
-		return err
+	if a.Request == nil {
+		return errors.New("request must not be empty")
 	}
 	_, err = time.Parse(layoutTime, a.Date)
 	if err != nil {

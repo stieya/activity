@@ -33,15 +33,25 @@ func (a *APIActivityRequest) toModel() apiActivity {
 	req, errReq := formatRequest(a.Request)
 	resp, errResp := formatResponse(a.response)
 
+	var errReqStr string
+	if errReq != nil {
+		errReqStr = errReq.Error()
+	}
+
+	var errRespStr string
+	if errResp != nil {
+		errRespStr = errReq.Error()
+	}
+
 	return apiActivity{
 		token:         a.Token,
 		userID:        a.UserID,
 		date:          date,
 		apiName:       a.APIName,
 		request:       string(req),
-		errorRequest:  errReq.Error(),
+		errorRequest:  errReqStr,
 		response:      string(resp),
-		errorResponse: errResp.Error(),
+		errorResponse: errRespStr,
 		createdBy:     a.UserID,
 		createdAt:     time.Now(),
 	}

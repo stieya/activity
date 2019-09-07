@@ -59,7 +59,7 @@ func (a *apiActivity) toDTO() APIActivityDTO {
 	}
 }
 
-func (a *APIActivityRequest) Send(db *sqlx.DB) error {
+func (a *APIActivityRequest) Send(db interface{}) error {
 	if err := a.validate(db); err != nil {
 		log.Println("Failed Send APIActivity: ", err.Error())
 		return err
@@ -79,7 +79,7 @@ func (a *APIActivityRequest) Send(db *sqlx.DB) error {
 	return nil
 }
 
-func (a *APIActivityRequest) FindAPIActivityByUserID(db *sqlx.DB) ([]APIActivityDTO, error) {
+func (a *APIActivityRequest) FindAPIActivityByUserID(db interface{}) ([]APIActivityDTO, error) {
 	activities := []apiActivity{}
 	activityDTOs := []APIActivityDTO{}
 
@@ -105,7 +105,7 @@ func (a *APIActivityRequest) FindAPIActivityByUserID(db *sqlx.DB) ([]APIActivity
 	return activityDTOs, nil
 }
 
-func (a *APIActivityRequest) validate(db *sqlx.DB) error {
+func (a *APIActivityRequest) validate(db interface{}) error {
 	if db == nil {
 		return fmt.Errorf("db config is null")
 	}
@@ -133,7 +133,7 @@ func (a *APIActivityRequest) validate(db *sqlx.DB) error {
 	return nil
 }
 
-func (a *APIActivityRequest) validateDBUserID(db *sqlx.DB) error {
+func (a *APIActivityRequest) validateDBUserID(db interface{}) error {
 	if db == nil {
 		return fmt.Errorf("db config is null")
 	}
@@ -145,8 +145,8 @@ func (a *APIActivityRequest) validateDBUserID(db *sqlx.DB) error {
 	return nil
 }
 
-func (a *apiActivity) save(db *sqlx.DB) error {
-	result, err := db.Exec(saveQuery, a.userID, a.token, a.date, a.apiName, a.request, a.errorRequest, a.response, a.errorResponse, a.createdBy)
+func (a *apiActivity) save(db interface{}) error {
+	result, err := db.(*sqlx.DB).Exec(saveQuery, a.userID, a.token, a.date, a.apiName, a.request, a.errorRequest, a.response, a.errorResponse, a.createdBy)
 	if err != nil {
 		return err
 	}
@@ -158,11 +158,11 @@ func (a *apiActivity) save(db *sqlx.DB) error {
 	return nil
 }
 
-func findAPIActivityByUserID(db *sqlx.DB, userID int64) ([]apiActivity, error) {
+func findAPIActivityByUserID(db interface{}, userID int64) ([]apiActivity, error) {
 	actvities := []apiActivity{}
 	query := fmt.Sprintf("%s", findAPIActivityByUserIDQuery)
 
-	err := db.Select(&actvities, query, userID)
+	err := db.(*sqlx.DB).Select(&actvities, query, userID)
 	if err != nil {
 		return actvities, err
 	}
@@ -182,7 +182,7 @@ func (a *APIActivityRequest) SetLogger(filepath, filename string) {
 	a.aLogger = filelog
 }
 
-func (a *APIActivityRequest) ClientDo(db *sqlx.DB, client http.Client, req *http.Request) (*http.Response, error) {
+func (a *APIActivityRequest) ClientDo(db interface{}, client http.Client, req *http.Request) (*http.Response, error) {
 	// client do
 	response, err := client.Do(req)
 

@@ -4,8 +4,6 @@ import (
 	"log"
 	"net/http"
 	"time"
-
-	_ "github.com/lib/pq"
 )
 
 type apiActivity struct {

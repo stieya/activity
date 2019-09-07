@@ -10,9 +10,6 @@ import (
 	"net"
 	"net/http"
 	"time"
-
-	"github.com/jmoiron/sqlx"
-	_ "github.com/lib/pq"
 )
 
 func NewCustomerActivity(url string, customerID int64, userID int64, token string, activity string, date string, data string, oldData string) CustomerActivity {
@@ -28,7 +25,7 @@ func NewCustomerActivity(url string, customerID int64, userID int64, token strin
 	}
 }
 
-func (c *CustomerActivity) Send(db *sqlx.DB) error {
+func (c *CustomerActivity) Send(db interface{}) error {
 	// init variable
 	var apiName = "CustomerActivity"
 	var actResp = ActivityResponse{}

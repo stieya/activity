@@ -29,8 +29,6 @@ func NewAPIActivityRequest(userID int64, token string, date string, apiName stri
 }
 
 func (a *APIActivityRequest) toModel() apiActivity {
-	var req []byte
-	var resp []byte
 	var errReq error
 	var errResp error
 	var errReqStr string
@@ -38,18 +36,14 @@ func (a *APIActivityRequest) toModel() apiActivity {
 
 	date, _ := time.Parse(layoutTime, a.Date)
 
-	if req != nil {
-		req, errReq = formatRequest(a.Request)
-		if errReq != nil {
-			errReqStr = errReq.Error()
-		}
+	req, errReq := formatRequest(a.Request)
+	if errReq != nil {
+		errReqStr = errReq.Error()
 	}
 
-	if resp != nil {
-		resp, errResp = formatResponse(a.response)
-		if errResp != nil {
-			errRespStr = errResp.Error()
-		}
+	resp, errResp := formatResponse(a.response)
+	if errResp != nil {
+		errRespStr = errResp.Error()
 	}
 
 	return apiActivity{

@@ -29,18 +29,27 @@ func NewAPIActivityRequest(userID int64, token string, date string, apiName stri
 }
 
 func (a *APIActivityRequest) toModel() apiActivity {
-	date, _ := time.Parse(layoutTime, a.Date)
-	req, errReq := formatRequest(a.Request)
-	resp, errResp := formatResponse(a.response)
-
+	var req []byte
+	var resp []byte
+	var errReq error
+	var errResp error
 	var errReqStr string
-	if errReq != nil {
-		errReqStr = errReq.Error()
+	var errRespStr string
+
+	date, _ := time.Parse(layoutTime, a.Date)
+
+	if req != nil {
+		req, errReq = formatRequest(a.Request)
+		if errReq != nil {
+			errReqStr = errReq.Error()
+		}
 	}
 
-	var errRespStr string
-	if errResp != nil {
-		errRespStr = errReq.Error()
+	if resp != nil {
+		resp, errResp = formatResponse(a.response)
+		if errResp != nil {
+			errRespStr = errResp.Error()
+		}
 	}
 
 	return apiActivity{

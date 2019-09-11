@@ -120,6 +120,9 @@ func formatRequest(r *http.Request) ([]byte, error) {
 
 // formatResponse generates ascii representation of a response
 func formatResponse(r *http.Response) ([]byte, error) {
+	if r == nil {
+		return []byte(""), nil
+	}
 	return httputil.DumpResponse(r, true)
 }
 

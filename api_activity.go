@@ -201,7 +201,7 @@ func (a *APIActivityRequest) ClientDo(db interface{}, client http.Client, req *h
 
 	// send apiactivity
 	a.SetResponseAPI(response, err)
-	go a.Send(db)
+	a.Send(db)
 
 	return response, err
 }
